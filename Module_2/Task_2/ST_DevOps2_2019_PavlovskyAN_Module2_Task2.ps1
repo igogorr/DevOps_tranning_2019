@@ -1,4 +1,4 @@
-<#
+﻿<#
 EPAM Systems, RDDep.
 
 
@@ -31,9 +31,9 @@ $res=Get-Variable | Where-Object -FilterScript {$_.Value.GetType() -like 'int*'}
 $res | foreach {$summ += $_.value}
 $summ
 # 6.	Вывести список из 6 процессов занимающих дольше всего процессор.
-Get-Process | Where-Object -FilterScript {$PSItem.CPU -ge 70} | Sort-Object CPU -Descending
+Get-Process | Sort-Object CPU -Descending | select-object -first 6
 # 7.	Вывести список названий и занятую виртуальную память (в Mb) каждого процесса, разделённые знаком тире, при этом если процесс занимает более 100Mb – выводить информацию красным цветом, иначе зелёным.
-Get-Process | Select-Object -Property name,@{n="Memory"; e={$_.VirtualMemorySize/1Mb}} | ForEach-Object {if ($_.VirtualMemorySize -ge 100.0) {Write-Host -ForegroundColor red $_.Name,$_.VirtualMemorySize} else {Write-Host -ForegroundColor green $_.Name, $_.VirtualMemorySize}}
+Get-Process | ForEach-Object {if ($($_.VM/1Mb) -gt 100) {Write-Host ($_.name, ("{0:N2}" -f $($_.VM/1Mb))) -separator " - " -ForegroundColor red} else {Write-Host ($_.name, ("{0:N2}" -f $($_.VM/1Mb))) -separator " - " -ForegroundColor green}}
 # 8.	Подсчитать размер занимаемый файлами в папке C:\windows (и во всех подпапках) за исключением файлов *.tmp
 "{0:N2} Gb" -f ((Get-ChildItem –force c:\Windows –Recurse -ErrorAction SilentlyContinue -Exclude *.tmp | Measure-Object Length -Sum).sum / 1Gb) 
 # 9.	Сохранить в CSV-файле информацию о записях одной ветви реестра HKLM:\SOFTWARE\Microsoft.
