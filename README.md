@@ -1,1 +1,2 @@
-# DevOps_tranning_2019
+# DevOps2_tranning_2019
+# Home tasks
