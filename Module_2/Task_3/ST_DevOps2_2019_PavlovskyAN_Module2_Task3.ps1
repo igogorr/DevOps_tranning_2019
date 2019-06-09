@@ -5,14 +5,15 @@
 #>
 function module2_task3_1_1
 {
-Param (
+Param 
+    (
   [parameter(Mandatory=$true, HelpMessage="Enter name of output .txt file")]
   [string]$SavedFile = $(Throw "Enter name, for Example, $home\Documents\1.txt"),
   [parameter(Mandatory=$true, HelpMessage="Enter Disc Letter")]
   [ValidateLength(1,1)][string]$OutputDisc = $(Throw "Enter one Disc letter, for Example, C:"),
   [parameter(Mandatory=$true, HelpMessage="File name")]
   [string]$OutputFile = $(Throw "Enter name, for Example, $home\Documents\1.txt")
-)
+    )
 Write-Host ('Task 1.1.1 ' + '-' * 20)
 Get-Service > $SavedFile
 Write-Host ('Task 1.1.2 ' + '-' * 20)
@@ -20,31 +21,34 @@ Get-ChildItem $OutputDisc
 Write-Host ('Task 1.1.3 ' + '-' * 20)
 $test_path = Test-Path -Path $OutputFile
 if ($test_path = $True)
-{
-Get-Content -Path $OutputFile
-}
+    {
+    Get-Content -Path $OutputFile
+    }
 else
-{
-Write-host "File $OutputFile doesn't exist"
+    {
+    Write-host "File $OutputFile doesn't exist"
+    }
 }
-}
+
 module2_task3_1_1
 
 # 1.2. Просуммировать все числовые значения переменных среды Windows. (Параметры не нужны)
 function module2_task3_1_2
 {
 $summ = 0
-Get-Variable | ForEach-Object {
-if (($PSitem.Name -ne "null") -and ($PSItem.Value.GetType() -eq [int32]))
-{
-$summ+=$PSitem.Value
-} 
-else 
-{
-}
-}
+Get-Variable | ForEach-Object 
+    {
+        if (($PSitem.Name -ne "null") -and ($PSItem.Value.GetType() -eq [int32]))
+        {
+        $summ+=$PSitem.Value
+        } 
+        else 
+        {
+        }
+    }
 $summ
 }
+
 module2_task3_1_2
 
 # 1.3.	Вывести список из 10 процессов занимающих дольше всего процессор.
@@ -56,16 +60,19 @@ $Trigger = New-ScheduledTaskTrigger -Once -At "06/08/2019 23:39:00" -RepetitionI
 $Action= New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "C:\Temp\Get-top10-processes.ps1"
 Register-ScheduledTask -TaskName "Get_top10-Processes" -Trigger $Trigger -Action $Action -RunLevel Highest –Force
 
+
 # 1.4.	Подсчитать размер занимаемый файлами в папке (например C:\windows) за исключением файлов с заданным расширением (например .tmp)
 
 function module2_task3_1_4
 {
-Param (
+Param 
+    (
   [parameter(Mandatory=$true, HelpMessage="Enter Folder name, for example, c:\windows")]
   [string]$Folder = "c:\windows"
-)
+    )
 "{0:N2} Gb" -f ((Get-ChildItem –force $Folder –Recurse -ErrorAction SilentlyContinue -Exclude *.tmp | Measure-Object Length -Sum).sum / 1Gb) 
 }
+
 module2_task3_1_4 -Folder C:\Windows
 
 <# 
