@@ -1,4 +1,4 @@
-# 1.	Для каждого пункта написать и выполнить соответсвующий скрипт автоматизации администрирования:
+﻿# 1.	Для каждого пункта написать и выполнить соответсвующий скрипт автоматизации администрирования:
 # 1.1.	Вывести все IP адреса вашего компьютера (всех сетевых интерфейсов)
 Get-WmiObject -Class win32_networkadapterconfiguration -filter IPenabled=True | 
 Select-Object -Property description, ipaddress, ipsubnet
@@ -13,7 +13,20 @@ New-SmbShare -Name 'SharedFolder' -path 'c:\Temp\SharedFolder' -ContinuouslyAvai
 # 1.5.	Удалить шару из п.1.4
 Remove-SmbShare -Name SharedFolder -Force
 # 1.6.	Скрипт входными параметрами которого являются Маска подсети и два ip-адреса. Результат  – сообщение (ответ) в одной ли подсети эти адреса.
-#
+$ip1 = [ipaddress] '192.168.1.1'
+$mask1 = [ipaddress] '255.255.255.0'
+$networkID1 = [ipaddress]($ip1.Address -band $mask1.Address)
+
+$ip2 = [ipaddress] '192.168.1.100'
+$mask2 = [ipaddress] '255.255.255.0'
+$networkID2 = [ipaddress]($ip2.Address -band $mask2.Address)
+
+if ($networkID1.Address -eq $networkID2.Address){
+Write-Output 'Addresses in one subnet'
+}
+else{
+Write-Output 'Addresses in different subnets'
+}
 # 2.	Работа с Hyper-V
 # 2.1.	Получить список коммандлетов работы с Hyper-V (Module Hyper-V)
 Get-Command -Module Hyper-V
