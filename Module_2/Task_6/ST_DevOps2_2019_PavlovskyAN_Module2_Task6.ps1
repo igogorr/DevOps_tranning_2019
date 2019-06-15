@@ -13,20 +13,42 @@ New-SmbShare -Name 'SharedFolder' -path 'c:\Temp\SharedFolder' -ContinuouslyAvai
 # 1.5.	Удалить шару из п.1.4
 Remove-SmbShare -Name SharedFolder -Force
 # 1.6.	Скрипт входными параметрами которого являются Маска подсети и два ip-адреса. Результат  – сообщение (ответ) в одной ли подсети эти адреса.
-$ip1 = [ipaddress] '192.168.1.1'
-$mask1 = [ipaddress] '255.255.255.0'
+function ipv4Addresses {
+param(
+[parameter(mandatory=$true,HelpMessage="Enter IP Address")]
+[ipaddress]
+[string]
+$ip1,
+
+[parameter(mandatory=$true,HelpMessage="Enter IPsubnet mask")]
+[ipaddress]
+[string]
+$mask1,
+
+[parameter(mandatory=$true,HelpMessage="Enter IP Address")]
+[ipaddress]
+[string]
+$ip2,
+
+[parameter(mandatory=$true,HelpMessage="Enter IPsubnet mask")]
+[ipaddress]
+[string]
+$mask2
+)
 $networkID1 = [ipaddress]($ip1.Address -band $mask1.Address)
 
-$ip2 = [ipaddress] '192.168.1.100'
-$mask2 = [ipaddress] '255.255.255.0'
 $networkID2 = [ipaddress]($ip2.Address -band $mask2.Address)
 
-if ($networkID1.Address -eq $networkID2.Address){
-Write-Output 'Addresses in one subnet'
+    if ($networkID1.Address -eq $networkID2.Address){
+        Write-Output "Addresses $ip1, $ip2 in one subnet"
+    }
+    else{
+        Write-Output "Addresses $ip1, $ip2 in different subnets"
+    }
 }
-else{
-Write-Output 'Addresses in different subnets'
-}
+
+ipv4Addresses -ip1 192.168.1.1 -mask1 255.255.255.252 -ip2 192.168.1.2 -mask2 255.255.255.252
+
 # 2.	Работа с Hyper-V
 # 2.1.	Получить список коммандлетов работы с Hyper-V (Module Hyper-V)
 Get-Command -Module Hyper-V
